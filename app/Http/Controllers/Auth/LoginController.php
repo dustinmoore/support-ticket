@@ -25,12 +25,12 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * LoginController constructor.
      */
     public function __construct()
     {

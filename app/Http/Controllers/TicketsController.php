@@ -79,6 +79,9 @@ class TicketsController extends Controller
         return view('tickets.show', compact('ticket', 'category', 'comments'));
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $tickets = Ticket::paginate(10);
