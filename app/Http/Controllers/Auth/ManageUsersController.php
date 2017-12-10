@@ -19,21 +19,6 @@ class ManageUsersController extends Controller
         $this->middleware('admin');
     }
 
-    /**
-     * Get a validator for an incoming user request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-    }
-
     public function create()
     {
         return view('auth.create_user');
@@ -47,13 +32,11 @@ class ManageUsersController extends Controller
      */
     protected function store(Request $request)
     {
-        $validData = [
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
-
-        $this->validator($validData);
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
 
         $user = new User([
             'name' => $request->input('name'),
@@ -64,7 +47,6 @@ class ManageUsersController extends Controller
         $user->save();
 
         return redirect('/admin/manage_users')->with("status", "The user account for $user->name has been updated");
-
     }
 
     /**
@@ -74,13 +56,18 @@ class ManageUsersController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $validData = [
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
-
-        $this->validator($validData);
+        if (!empty($request->input('password'))) {
+            $this->validate($request, [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+        } else {
+            $this->validate($request, [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255',
+            ]);
+        }
 
         $user = User::where('id', $id)->first();
 
@@ -92,6 +79,8 @@ class ManageUsersController extends Controller
         }
         if ($request->input('is_admin')) {
             $user->is_admin = $request->input('is_admin');
+        } else {
+            $user->is_admin = 0;
         }
 
         $user->save();

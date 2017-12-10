@@ -76,7 +76,10 @@
                                                 Create New User
                                             </a>
                                             <a href="{{ url('/admin/tickets') }}">
-                                                View All Tickets
+                                                View All Open Tickets
+                                            </a>
+                                            <a href="{{ url('/admin/closed_tickets') }}">
+                                                View Closed Tickets
                                             </a>
 
                                         </li>

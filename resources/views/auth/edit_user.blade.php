@@ -7,18 +7,17 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Create User</div>
+                    <div class="panel-heading">Edit User</div>
 
                     <div class="panel-body">
-                        <form class="form-horizontal" method="POST" action="{{ url('/admin/user/' . $user->id) }}">
+                        @include('includes.flash')
+                        {{ Form::open(array('url' => '/admin/user/' . $user->id)) }}
                             {{ csrf_field() }}
 
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <label for="name" class="col-md-4 control-label">Name</label>
-
+                                {{ Form::label('name', 'Name', ['class' => 'col-md-4 control-label extra-padding']) }}
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name', $user->name) }}" required autofocus>
-
+                                    {{ Form::text('name', $user->name, ['class' => 'form-control extra-padding', 'required' => 'required']) }}
                                     @if ($errors->has('name'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('name') }}</strong>
@@ -28,11 +27,9 @@
                             </div>
 
                             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
+                                {{ Form::label('email', 'Email', ['class' => 'col-md-4 control-label extra-padding']) }}
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email', $user->email) }}" required>
-
+                                    {{ Form::text('email', $user->email, ['class' => 'form-control extra-padding', 'required' => 'required']) }}
                                     @if ($errors->has('email'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -42,10 +39,9 @@
                             </div>
 
                             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <label for="password" class="col-md-4 control-label">Password</label>
-
+                                {{ Form::label('password', 'Password', ['class' => 'col-md-4 control-label extra-padding']) }}
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password">
+                                    {{ Form::text('password', null, ['class' => 'form-control extra-padding']) }}
 
                                     @if ($errors->has('password'))
                                         <span class="help-block">
@@ -56,18 +52,16 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-
+                                {{ Form::label('password-confirm', 'Confirm Password', ['class' => 'col-md-4 control-label extra-padding']) }}
                                 <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation">
+                                    {{ Form::text('password-confirm', null, ['class' => 'form-control extra-padding']) }}
                                 </div>
                             </div>
 
                             <div class="form-group{{ $errors->has('is_admin') ? ' has-error' : '' }}">
-                                <label for="is_admin" class="col-md-4 control-label">Is Admin?</label>
-
+                                {{ Form::label('is_admin', 'Is Admin?', ['class' => 'col-md-4 control-label extra-padding']) }}
                                 <div class="col-md-6">
-                                    <input name="is_admin" type="checkbox" value="{{ old('is_admin', $user->is_admin) }}">
+                                    {{ Form::checkbox('is_admin', 1, ($user->is_admin ? true : false), ['class' => 'form-control extra-padding']) }}
                                 </div>
                             </div>
 
@@ -78,7 +72,7 @@
                                     </button>
                                 </div>
                             </div>
-                        </form>
+                        {{ Form::close() }}
                     </div>
                 </div>
             </div>

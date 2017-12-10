@@ -1,27 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'My Tickets')
+@section('title', 'All Tickets')
 
 @section('content')
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-body">
-                    <a href="{{ url('new_ticket') }}" class="btn btn-success">Create Ticket</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-ticket"> My Tickets</i>
+                    <i class="fa fa-ticket"> Tickets</i>
                 </div>
 
                 <div class="panel-body">
                     @if ($tickets->isEmpty())
-                        <p>You have not created any tickets.</p>
+                        <p>There are currently no tickets.</p>
                     @else
                         <table class="table table-striped">
                             <thead>
@@ -32,13 +23,14 @@
                                 <th>Priority</th>
                                 <th>Status</th>
                                 <th>Last Updated</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach ($tickets as $ticket)
                                 <tr>
                                     <td>
-                                       {{ $ticket->category->name }}
+                                        {{ $ticket->category->name }}
                                     </td>
                                     <td>
                                         #{{ $ticket->ticket_id }}
@@ -65,6 +57,14 @@
                                         @endif
                                     </td>
                                     <td>{{ $ticket->updated_at }}</td>
+
+                                    <td>
+                                        <form action="{{ url('admin/open_ticket/' . $ticket->ticket_id) }}"
+                                              method="POST">
+                                            {!! csrf_field() !!}
+                                            <button type="submit" class="btn btn-success">Re-Open</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

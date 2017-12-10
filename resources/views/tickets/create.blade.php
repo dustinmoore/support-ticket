@@ -28,6 +28,20 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('cc_email') ? ' has-error' : '' }}">
+                            <label for="cc_email" class="col-md-4 control-label">CC Email</label>
+
+                            <div class="col-md-6">
+                                <input id="cc_email" type="text" class="form-control" name="cc_email" value="{{ old('cc_email') }}">
+
+                                @if ($errors->has('cc_email'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('cc_email') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('category') ? ' has-error' : '' }}">
                             <label for="category" class="col-md-4 control-label">Category</label>
 

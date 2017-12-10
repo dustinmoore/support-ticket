@@ -20,6 +20,7 @@
                 </div>
 
                 <div class="panel-body">
+                    @include('includes.flash')
                     @if ($users->isEmpty())
                         <p>There are currently no active users.</p>
                     @else

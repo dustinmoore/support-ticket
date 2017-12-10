@@ -18,6 +18,7 @@
                             <thead>
                             <tr>
                                 <th>Category</th>
+                                <th>Ticket #</th>
                                 <th>Title</th>
                                 <th>Priority</th>
                                 <th>Status</th>
@@ -32,8 +33,11 @@
                                         {{ $ticket->category->name }}
                                     </td>
                                     <td>
+                                        #{{ $ticket->ticket_id }}
+                                    </td>
+                                    <td>
                                         <a href="{{ url('tickets/'. $ticket->ticket_id) }}">
-                                            #{{ $ticket->ticket_id }} - {{ $ticket->title }}
+                                            {{ $ticket->title }}
                                         </a>
                                     </td>
                                     <td>

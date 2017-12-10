@@ -8,3 +8,6 @@ body {
 .navbar-brand {
     padding: 0px;
 }
+.extra-padding {
+    margin-bottom: 10px;
+}

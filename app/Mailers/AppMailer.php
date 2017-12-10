@@ -15,6 +15,7 @@ class AppMailer
     protected $fromAddress = 'support@supportticket.dev';
     protected $fromName = 'Support Ticket';
     protected $to;
+    protected $cc;
     protected $subject;
     protected $view;
     protected $data = [];
@@ -35,6 +36,7 @@ class AppMailer
     public function sendTicketInformation($user, Ticket $ticket)
     {
         $this->to = $user->email;
+        $this->cc = $ticket->cc_email;
         $this->subject = "[Ticket ID: $ticket->ticket_id] $ticket->title";
         $this->view = 'emails.ticket_info';
         $this->data = compact('user', 'ticket');
@@ -51,6 +53,7 @@ class AppMailer
     public function sendTicketComments($ticketOwner, $user, Ticket $ticket, $comment)
     {
         $this->to = $ticketOwner->email;
+        $this->cc = $ticket->cc_email;
         $this->subject = "RE: $ticket->title (Ticket ID: $ticket->ticket_id)";
         $this->view = 'emails.ticket_comments';
         $this->data = compact('ticketOwner', 'user', 'ticket', 'comment');
@@ -65,6 +68,7 @@ class AppMailer
     public function sendTicketStatusNotification($ticketOwner, Ticket $ticket)
     {
         $this->to = $ticketOwner->email;
+        $this->cc = $ticket->cc_email;
         $this->subject = "RE: $ticket->title (Ticket ID: $ticket->ticket_id)";
         $this->view = 'emails.ticket_status';
         $this->data = compact('ticketOwner', 'ticket');
@@ -74,9 +78,20 @@ class AppMailer
 
     public function deliver()
     {
-        $this->mailer->send($this->view, $this->data, function ($message) {
-            $message->from($this->fromAddress, $this->fromName)
-                ->to($this->to)->subject($this->subject);
-        });
+        if($this->cc) {
+            $this->mailer->send($this->view, $this->data, function ($message) {
+                $message->from($this->fromAddress, $this->fromName)
+                    ->to($this->to)
+                    ->cc($this->cc)
+                    ->subject($this->subject);
+            });
+        } else {
+            $this->mailer->send($this->view, $this->data, function ($message) {
+                $message->from($this->fromAddress, $this->fromName)
+                    ->to($this->to)
+                    ->subject($this->subject);
+            });
+        }
+
     }
 }

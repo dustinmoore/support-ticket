@@ -22,6 +22,7 @@ Route::get('new_ticket', 'TicketsController@create');
 Route::post('new_ticket', 'TicketsController@store');
 Route::get('my_tickets', 'TicketsController@userTickets');
 Route::get('tickets/{ticket_id}', 'TicketsController@show');
+Route::post('close_ticket/{ticket_id}', 'TicketsController@close');
 
 //Comment Routes
 Route::post('comment', 'CommentsController@postComment');
@@ -29,10 +30,11 @@ Route::post('comment', 'CommentsController@postComment');
 //Admin Routes
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function() {
     Route::get('tickets', 'TicketsController@index');
-    Route::post('close_ticket/{ticket_id}', 'TicketsController@close');
+    Route::get('closed_tickets', 'TicketsController@closedTickets');
     Route::get('create_user', 'Auth\ManageUsersController@create');
     Route::post('create_user', 'Auth\ManageUsersController@store');
     Route::get('manage_users', 'Auth\ManageUsersController@index');
     Route::get('user/{user_id}', 'Auth\ManageUsersController@show');
     Route::post('user/{user_id}', 'Auth\ManageUsersController@edit');
+    Route::post('open_ticket/{ticket_id}', 'TicketsController@open');
 });

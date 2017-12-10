@@ -44,13 +44,14 @@ class TicketsController extends Controller
             'priority' => $request->input('priority'),
             'message' => $request->input('message'),
             'status' => "Open",
+            'cc_email' => $request->input('cc_email'),
         ]);
 
         $ticket->save();
 
         $mailer->sendTicketInformation(Auth::user(), $ticket);
 
-        return redirect()->back()->with("status", "A ticket with ID: #$ticket->ticket_id has been opened.");
+        return redirect('my_tickets')->with("status", "A ticket with ID: #$ticket->ticket_id has been opened.");
     }
 
     /**
@@ -91,6 +92,19 @@ class TicketsController extends Controller
     }
 
     /**
+     * This allows admin to see closed tickets. Access controlled via routes
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function closedTickets()
+    {
+        $tickets = Ticket::where('status', 'Closed')->paginate(10);
+        $categories = Category::all();
+
+        return view('tickets.closed_tickets', compact('tickets', 'categories'));
+    }
+
+    /**
      * @param $ticket_id
      * @param AppMailer $mailer
      * @return \Illuminate\Http\RedirectResponse
@@ -108,5 +122,25 @@ class TicketsController extends Controller
         $mailer->sendTicketStatusNotification($ticketOwner, $ticket);
 
         return redirect()->back()->with("status", "The ticket has been closed.");
+    }
+
+    /**
+     * @param $ticket_id
+     * @param AppMailer $mailer
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function open($ticket_id, AppMailer $mailer)
+    {
+        $ticket = Ticket::where('ticket_id', $ticket_id)->firstOrFail();
+
+        $ticket->status = 'Open';
+
+        $ticket->save();
+
+        $ticketOwner = $ticket->user;
+
+        $mailer->sendTicketStatusNotification($ticketOwner, $ticket);
+
+        return redirect()->back()->with("status", "The ticket has been re-opened.");
     }
 }

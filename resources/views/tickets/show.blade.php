@@ -3,19 +3,58 @@
 @section('title', $ticket->title)
 
 @section('content')
+    @if ($ticket->status == 'Open')
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form action="{{ url('/close_ticket/' . $ticket->ticket_id) }}"
+                          method="POST">
+                        {!! csrf_field() !!}
+                        <button type="submit" class="btn btn-danger">Close Ticket</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    @if (Auth::user()->is_admin == 1 && $ticket->status == 'Closed')
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form action="{{ url('admin/open_ticket/' . $ticket->ticket_id) }}"
+                              method="POST">
+                            {!! csrf_field() !!}
+                            <button type="submit" class="btn btn-success">Re-Open</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    #{{ $ticket->ticket_id }} - {{ $ticket->title }}
+                     <h4>{{ $ticket->title }}</h4>
                 </div>
 
                 <div class="panel-body">
                     @include('includes.flash')
 
                     <div class="ticket-info">
-                        <p>{{ $ticket->message }}</p>
-                        <p>Categry: {{ $category->name }}</p>
+                        <p><b>Ticket #:</b> {{ $ticket->ticket_id }}</p>
+                        <p>Category: {{ $category->name }}</p>
+                        <p>
+                            @if ($ticket->priority === 'low')
+                               Priority: <span class="label label-info">{{ $ticket->priority }}</span>
+                            @elseif ($ticket->priority === 'medium')
+                                Priority: <span class="label label-warning">{{ $ticket->priority }}</span>
+                            @elseif ($ticket->priority === 'high')
+                                Priority: <span class="label label-danger">{{ $ticket->priority }}</span>
+                            @endif
+                        </p>
                         <p>
                             @if ($ticket->status === 'Open')
                                 Status: <span class="label label-success">{{ $ticket->status }}</span>
@@ -23,7 +62,9 @@
                                 Status: <span class="label label-danger">{{ $ticket->status }}</span>
                             @endif
                         </p>
-                        <p>Created on: {{ $ticket->created_at->diffForHumans() }}</p>
+                        <p>Created: {{ $ticket->created_at->diffForHumans() }}</p>
+                        <hr>
+                        <p>{{ $ticket->message }}</p>
                     </div>
 
                     <hr>
@@ -42,7 +83,7 @@
                             </div>
                         @endforeach
                     </div>
-
+                    <h4>Reply to ticket</h4>
                     <div class="comment-form">
                         <form action="{{ url('comment') }}" method="POST" class="form">
                             {!! csrf_field() !!}
@@ -60,7 +101,7 @@
                             </div>
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary">Reply</button>
                             </div>
                         </form>
                     </div>
