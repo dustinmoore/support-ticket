@@ -85,7 +85,7 @@ class TicketsController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::paginate(10);
+        $tickets = Ticket::where('status', 'Open')->paginate(10);
         $categories = Category::all();
 
         return view('tickets.index', compact('tickets', 'categories'));
