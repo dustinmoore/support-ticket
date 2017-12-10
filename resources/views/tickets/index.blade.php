@@ -18,6 +18,7 @@
                             <thead>
                             <tr>
                                 <th>Category</th>
+                                <th>Created BY</th>
                                 <th>Ticket #</th>
                                 <th>Title</th>
                                 <th>Priority</th>
@@ -31,6 +32,9 @@
                                 <tr>
                                     <td>
                                         {{ $ticket->category->name }}
+                                    </td>
+                                    <td>
+                                        {{ $ticket->user->name }}
                                     </td>
                                     <td>
                                         #{{ $ticket->ticket_id }}
