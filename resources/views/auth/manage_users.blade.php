@@ -28,6 +28,7 @@
                             <thead>
                             <tr>
                                 <th>User</th>
+                                <th>User Type</th>
                                 <th>Email</th>
                                 <th>Created</th>
                                 <th>Last Updated</th>
@@ -40,6 +41,13 @@
                                         <a href="{{ url('/admin/user/'. $user->id) }}">
                                            {{ $user->name }}
                                         </a>
+                                    </td>
+                                    <td>
+                                        @if ($user->is_admin == 1)
+                                            Admin
+                                        @else
+                                            Standard User
+                                        @endif
                                     </td>
                                     <td>
                                         {{ $user->email }}
